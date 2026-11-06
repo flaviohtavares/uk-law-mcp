@@ -2,11 +2,12 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "uk-law-mcp",
 	"main": "src/index.ts",
+	"account_id": "0c9dc11b2a6fcb4f42aa50d7dca82c76",
 	"compatibility_date": "2026-11-04",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"assets": { "directory": "./public", "binding": "ASSETS" },
 	"d1_databases": [
-		{ "binding": "DB", "database_name": "uk-law", "database_id": "00000000-0000-0000-0000-000000000000" }
+		{ "binding": "DB", "database_name": "uk-law", "database_id": "041400e5-e5a7-4333-b32e-13cb670b88b6" }
 	],
 	"observability": { "enabled": true },
 	"upload_source_maps": true

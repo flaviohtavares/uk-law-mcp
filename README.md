@@ -8,7 +8,7 @@ legislation.gov.uk.
 > **Not legal advice.** The texts are an unofficial copy and can be out of date or contain
 > conversion errors. Always check the official text at [legislation.gov.uk](https://www.legislation.gov.uk).
 
-**Server URL:** `https://uk-law-mcp.<account>.workers.dev/mcp` (no sign-in). The page at the root of
+**Server URL:** `https://uk-law-mcp.uk-law-mcp.workers.dev/mcp` (no sign-in). The page at the root of
 that address has the same instructions.
 
 ## Connect
