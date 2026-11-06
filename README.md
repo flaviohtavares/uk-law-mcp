@@ -11,19 +11,98 @@ legislation.gov.uk.
 **Server URL:** `https://uk-law-mcp.uk-law-mcp.workers.dev/mcp` (no sign-in). The page at the root of
 that address has the same instructions.
 
-## Connect
+## Install: step by step
 
-- **Claude (claude.ai, Claude Desktop):** Settings → Connectors → *Add custom connector* → paste the URL.
-- **ChatGPT:** Settings → Apps & Connectors → Advanced → *Developer mode* → *Create* → paste the URL,
-  "No authentication". Availability depends on the plan.
-- **Claude Code:** `claude mcp add --transport http uk-law <URL>`
-- **Codex:** in `~/.codex/config.toml`:
-  ```toml
-  [mcp_servers.uk-law]
-  url = "<URL>"
-  ```
+There are two ways to connect an assistant, and both are free:
 
-Then ask, for example: *"What does the Employment Rights Act say about notice periods?"*
+- the **MCP server** (`https://uk-law-mcp.uk-law-mcp.workers.dev/mcp`), for Claude, ChatGPT, Claude Code and Codex. Nothing to install on your computer and no sign-in;
+- the **skill** (a small Python script), for Claude Code and Codex. It reads GitHub directly and works without the server.
+
+After installing, test it with a question such as:
+*"What does section 86 of the Employment Rights Act 1996 say about notice periods?"*
+The answer should quote the section and link legislation.gov.uk.
+
+### Claude (claude.ai, Claude Desktop and the mobile apps)
+
+Works on every plan; the Free plan allows one custom connector.
+
+1. Open [Customize → Connectors](https://claude.ai/customize/connectors). The same connector then works in Claude Desktop and the mobile apps.
+2. Click **+ Add**, then **Add custom connector**.
+3. Name: `UK Law`. Remote MCP server URL: `https://uk-law-mcp.uk-law-mcp.workers.dev/mcp`. Click **Continue**.
+4. Under **Authentication**, choose **No sign in**, then click **Add**.
+5. In a chat, click **+** (bottom left) → **Connectors** and make sure **UK Law** is switched on. Then ask your question.
+
+On Team and Enterprise plans an Owner adds the connector once in **Organization settings → Connectors**
+(Add → Custom → Web, same URL, "No sign in"); members then switch it on in Customize → Connectors.
+
+### Claude Code
+
+**Option A, the plugin (recommended).** Type in Claude Code:
+
+```
+/plugin marketplace add flaviohtavares/uk-law-tools
+/plugin install uk-law@uk-law-tools
+```
+
+Restart Claude Code if asked. Update later with `/plugin marketplace update uk-law-tools`.
+
+**Option B, the MCP server.** In a terminal:
+
+```sh
+claude mcp add --transport http --scope user uk-law https://uk-law-mcp.uk-law-mcp.workers.dev/mcp
+```
+
+`--scope user` makes it available in every project. Check it with `/mcp` inside Claude Code.
+
+### Codex (CLI, IDE extension and app)
+
+**Option A, the MCP server.** In a terminal:
+
+```sh
+codex mcp add uk-law --url https://uk-law-mcp.uk-law-mcp.workers.dev/mcp
+```
+
+or add this to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.uk-law]
+url = "https://uk-law-mcp.uk-law-mcp.workers.dev/mcp"
+```
+
+Check it with `codex mcp list`, then start a new Codex session.
+
+**Option B, the skill.** In a terminal:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/flaviohtavares/uk-law-tools/main/install.sh | sh
+```
+
+It copies the skill to `~/.agents/skills/uk-law` (and `~/.codex/skills/uk-law`). Restart Codex.
+Run the same command to update.
+
+### ChatGPT
+
+Custom MCP servers work on **chatgpt.com (web)** with a **Pro**, **Business** or **Enterprise/Edu**
+plan. On Business, only workspace admins and owners can add them.
+
+1. Open [Plugins](https://chatgpt.com/plugins).
+2. Click **+**, then **Add custom MCP server**.
+3. Name: `UK Law`. Under **Connection**, enter `https://uk-law-mcp.uk-law-mcp.workers.dev/mcp`.
+4. Authentication: **None**.
+5. Tick **I understand and want to continue**, then click **Create as a plugin** and install it.
+6. In a new chat, type **@**, pick **UK Law**, and ask your question.
+
+**Free and Plus plans:** paste this link into the chat and ask your question; ChatGPT reads the
+instructions and opens the right file:
+
+```
+https://raw.githubusercontent.com/flaviohtavares/uk-law/main/llms.txt
+```
+
+### Other MCP clients
+
+Add `https://uk-law-mcp.uk-law-mcp.workers.dev/mcp` as a remote server (Streamable HTTP transport,
+no authentication).
 
 ## Tools
 

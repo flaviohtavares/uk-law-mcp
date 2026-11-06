@@ -19,20 +19,33 @@ section and the official link.</p>
 <p>Server URL:</p>
 <pre id="url">https://uk-law-mcp.example.workers.dev/mcp</pre>
 
-<h2>Claude (claude.ai and Claude Desktop)</h2>
-<p>Settings → Connectors → <b>Add custom connector</b>. Name it "UK Law" and paste the server URL. No sign-in is needed.</p>
+<h2>Claude (claude.ai, Claude Desktop, mobile)</h2>
+<ol>
+<li>Open <a href="https://claude.ai/customize/connectors">Customize → Connectors</a>.</li>
+<li>Click <b>+ Add</b> → <b>Add custom connector</b>.</li>
+<li>Name <code>UK Law</code>, paste the server URL, click <b>Continue</b>.</li>
+<li>Authentication: <b>No sign in</b>, then <b>Add</b>.</li>
+<li>In a chat: <b>+</b> → <b>Connectors</b> → make sure UK Law is on.</li>
+</ol>
+<p class="small">Free plan: one custom connector. Team/Enterprise: an Owner adds it in Organization settings → Connectors.</p>
 
 <h2>ChatGPT</h2>
-<p>Settings → Apps &amp; Connectors → Advanced → turn on <b>Developer mode</b>, then <b>Create</b> a connector with the
-server URL and "No authentication". Availability depends on your ChatGPT plan.</p>
+<p class="small">chatgpt.com (web) with a Pro, Business or Enterprise/Edu plan; on Business only admins and owners can add it.</p>
+<ol>
+<li>Open <a href="https://chatgpt.com/plugins">Plugins</a>, click <b>+</b> → <b>Add custom MCP server</b>.</li>
+<li>Name <code>UK Law</code>; under Connection, paste the server URL; authentication <b>None</b>.</li>
+<li>Tick <b>I understand and want to continue</b>, click <b>Create as a plugin</b> and install it.</li>
+<li>In a new chat, type <b>@</b>, pick UK Law and ask.</li>
+</ol>
+<p class="small">Free and Plus: paste <code>https://raw.githubusercontent.com/flaviohtavares/uk-law/main/llms.txt</code> into the chat instead.</p>
 
 <h2>Claude Code</h2>
-<pre id="cc">claude mcp add --transport http uk-law https://uk-law-mcp.example.workers.dev/mcp</pre>
+<pre id="cc">claude mcp add --transport http --scope user uk-law https://uk-law-mcp.example.workers.dev/mcp</pre>
+<p class="small">Or the plugin: <code>/plugin marketplace add flaviohtavares/uk-law-tools</code> then <code>/plugin install uk-law@uk-law-tools</code>.</p>
 
 <h2>Codex</h2>
-<p>Add to <code>~/.codex/config.toml</code>:</p>
-<pre id="codex">[mcp_servers.uk-law]
-url = "https://uk-law-mcp.example.workers.dev/mcp"</pre>
+<pre id="codex">codex mcp add uk-law --url https://uk-law-mcp.example.workers.dev/mcp</pre>
+<p class="small">Check with <code>codex mcp list</code>. Full guide: <a href="https://github.com/flaviohtavares/uk-law-mcp#install-step-by-step">github.com/flaviohtavares/uk-law-mcp</a>.</p>
 
 <h2>Tools</h2>
 <ul>
