@@ -5,8 +5,12 @@
   sync.py [--local]          send only the rows that changed since the last sync
 
 The last synced copy is kept next to the index's repository, so a failed run is simply redone.
-Free D1 plans allow 100,000 written rows a day: a full load (about 130,000 laws, plus the search
-index) may need the paid plan or two days; daily syncs write a few hundred rows.
+Free D1 plans allow 100,000 written rows a day. A full load writes about 520,000 (the laws plus
+the search index): on the free plan the import still finishes, but every other write is blocked
+until midnight UTC. Daily syncs write a few hundred rows. Do not run --full again without need.
+
+Known gap: ids are unique without regard to case, so of `aep/Cha2St1/13/4` and `aep/Cha2st1/13/4`
+(two Acts of 1661) only one is in the database.
 """
 import argparse
 import csv
