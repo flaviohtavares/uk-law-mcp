@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.flaviohtavares/uk-law",
+  "title": "UK Law",
+  "description": "Search and read all UK legislation (130k Acts and regulations), updated daily, with official links.",
+  "repository": {
+    "url": "https://github.com/flaviohtavares/uk-law-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://www.tavlabs.uk/uk-law",
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://uk-law-mcp.uk-law-mcp.workers.dev/mcp"
+    }
+  ]
+}
