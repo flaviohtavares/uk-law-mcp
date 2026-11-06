@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UK Law MCP server</title>
+<meta name="description" content="A free MCP server that lets Claude, ChatGPT and other AI assistants search and read UK legislation.">
+<style>
+body{margin:0;background:#08131c;color:#e6edf2;font:16px/1.6 system-ui,-apple-system,sans-serif}
+main{max-width:760px;margin:0 auto;padding:56px 24px}
+h1{font-size:40px;line-height:1.1;margin:0 0 12px}h2{margin-top:40px;font-size:22px}
+a{color:#16C784}code,pre{font:14px/1.6 ui-monospace,Menlo,monospace}
+pre{background:#0f2230;border:1px solid #1f3646;border-radius:12px;padding:14px 16px;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+.eyebrow{color:#16C784;text-transform:uppercase;letter-spacing:.14em;font-size:13px}
+.small{color:#8ea2b1;font-size:14px}
+</style></head><body><main>
+<div class="eyebrow">Open source · Tavlabs</div>
+<h1>UK Law MCP server</h1>
+<p>A free, read-only <a href="https://modelcontextprotocol.io">MCP</a> server that lets AI assistants search and read
+all UK legislation — about 130,000 Acts and regulations, updated daily from legislation.gov.uk — and answer with the exact
+section and the official link.</p>
+<p>Server URL:</p>
+<pre id="url">https://uk-law-mcp.example.workers.dev/mcp</pre>
+
+<h2>Claude (claude.ai and Claude Desktop)</h2>
+<p>Settings → Connectors → <b>Add custom connector</b>. Name it "UK Law" and paste the server URL. No sign-in is needed.</p>
+
+<h2>ChatGPT</h2>
+<p>Settings → Apps &amp; Connectors → Advanced → turn on <b>Developer mode</b>, then <b>Create</b> a connector with the
+server URL and "No authentication". Availability depends on your ChatGPT plan.</p>
+
+<h2>Claude Code</h2>
+<pre id="cc">claude mcp add --transport http uk-law https://uk-law-mcp.example.workers.dev/mcp</pre>
+
+<h2>Codex</h2>
+<p>Add to <code>~/.codex/config.toml</code>:</p>
+<pre id="codex">[mcp_servers.uk-law]
+url = "https://uk-law-mcp.example.workers.dev/mcp"</pre>
+
+<h2>Tools</h2>
+<ul>
+<li><b>search_laws</b> — find laws by title words or id, with filters (type, in force, extent, topic)</li>
+<li><b>get_law</b> — read a law, or one section, schedule or part of a long one</li>
+<li><b>list_topics</b>, <b>get_topic</b> — laws in force by subject</li>
+</ul>
+<p>Then ask: <i>"What does the Employment Rights Act say about notice periods?"</i></p>
+
+<h2>About</h2>
+<p>The data is the <a href="https://github.com/flaviohtavares/uk-law">UK Law repository</a>; there is also a
+<a href="https://github.com/flaviohtavares/uk-law-tools">Claude Code plugin</a> that works without this server.
+Built and maintained by <a href="https://www.tavlabs.uk/uk-law">Tavlabs Ltd</a>, London.</p>
+<p class="small">Not an official source and not legal advice: always check the official text at
+<a href="https://www.legislation.gov.uk">legislation.gov.uk</a>. Texts © Crown and database right, under the Open Government
+Licence v3.0. Not affiliated with or endorsed by The National Archives or the UK Government.</p>
+</main>
+<script>
+const u = location.origin + "/mcp";
+for (const id of ["url","cc","codex"]) { const e = document.getElementById(id); e.textContent = e.textContent.replace("https://uk-law-mcp.example.workers.dev/mcp", u); }
+</script>
+</body></html>
