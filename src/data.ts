@@ -122,3 +122,18 @@ export function describe(l: Law): string {
 	const bits = [l.status, l.extent ? `extent ${l.extent}` : "", l.topics ? `topics: ${l.topics}` : ""].filter(Boolean);
 	return `- ${l.id} — ${l.title} [${bits.join("; ")}]`;
 }
+
+/** Repository-relative links in a file, made absolute on GitHub; http links to legislation.gov.uk made https. */
+export function absolutize(text: string, filePath: string): string {
+	const dir = filePath.split("/").slice(0, -1);
+	const resolved = text.replace(/\]\((?!https?:|mailto:|#)([^)\s]+)\)/g, (_m, link: string) => {
+		const [target, hash] = link.split("#");
+		const parts = [...dir];
+		for (const seg of target.split("/")) {
+			if (seg === "..") parts.pop();
+			else if (seg && seg !== ".") parts.push(seg);
+		}
+		return `](${WEB}/${parts.join("/")}${hash ? `#${hash}` : ""})`;
+	});
+	return resolved.replace(/http:\/\/www\.legislation\.gov\.uk/g, "https://www.legislation.gov.uk");
+}

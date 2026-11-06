@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
 
-import { DISCLAIMER, OFFICIAL, WEB, clip, describe, getLaw, partFile, readFile, searchLaws, topics } from "./data";
+import { DISCLAIMER, OFFICIAL, WEB, absolutize, clip, describe, getLaw, partFile, readFile, searchLaws, topics } from "./data";
 
 const INSTRUCTIONS = `UK Law: the legislation of the United Kingdom (Acts and regulations of the UK Parliament, Scotland, Wales and Northern Ireland, historic parliaments and EU-origin law), converted from legislation.gov.uk and updated daily.
 
@@ -16,6 +16,11 @@ const readOnly = { readOnlyHint: true, openWorldHint: true } as const;
 
 function text(t: string) {
 	return { content: [{ type: "text" as const, text: t }] };
+}
+
+/** A tool result the client can recognise as an error (not found, bad part, unreadable file). */
+function fail(t: string) {
+	return { content: [{ type: "text" as const, text: t }], isError: true };
 }
 
 function createServer(env: Env) {
@@ -60,10 +65,10 @@ function createServer(env: Env) {
 		},
 		async ({ id, part, max_chars }) => {
 			const law = await getLaw(env.DB, id);
-			if (!law) return text(`No law with id "${id}". Use search_laws to find it.`);
+			if (!law) return fail(`No law with id "${id}". Use search_laws to find it.`);
 			let path = law.path;
 			let body = await readFile(path);
-			if (body === null) return text(`The file of ${law.title} could not be read (${WEB}/${path}).`);
+			if (body === null) return fail(`The file of ${law.title} could not be read (${WEB}/${path}).`);
 			if (part) {
 				if (!path.endsWith("/README.md")) {
 					body = `(${law.title} is a single file; here is all of it.)\n\n${body}`;
@@ -72,12 +77,12 @@ function createServer(env: Env) {
 					if (hit.files) {
 						return text(`${law.title}, ${part}: ask for one of these with get_law part:\n${hit.files.map((f) => `- ${f.replace(/-/g, " ")}`).join("\n")}`);
 					}
-					if (!hit.file) return text(`No "${part}" in the contents of ${law.title}. Call get_law without part to see the contents.`);
+					if (!hit.file) return fail(`No "${part}" in the contents of ${law.title}. Call get_law without part to see the contents.`);
 					path = `${path.slice(0, -"README.md".length)}${hit.file}`;
 					body = (await readFile(path)) ?? `The file ${path} could not be read.`;
 				}
 			}
-			return text(`${clip(body, max_chars ?? 60000)}\n\nFile: ${WEB}/${path}\nOfficial: ${OFFICIAL}/${law.id}\n${DISCLAIMER}`);
+			return text(`${clip(absolutize(body, path), max_chars ?? 60000)}\n\nFile: ${WEB}/${path}\nOfficial: ${OFFICIAL}/${law.id}\n${DISCLAIMER}`);
 		},
 	);
 
@@ -115,14 +120,14 @@ function createServer(env: Env) {
 			const found = all.find((t) => t.name.toLowerCase() === n) ?? all.filter((t) => t.name.toLowerCase().includes(n));
 			const topic = Array.isArray(found) ? (found.length === 1 ? found[0] : null) : found;
 			if (!topic) {
-				const options = Array.isArray(found) && found.length ? `Several match: ${found.map((t) => t.name).join("; ")}` : "No such topic; use list_topics.";
-				return text(options);
+				if (Array.isArray(found) && found.length) return text(`Several topics match: ${found.map((t) => t.name).join("; ")}`);
+				return fail("No such topic; use list_topics.");
 			}
 			let file = topic.file;
 			if (year && file.endsWith("/README.md")) file = file.replace(/README\.md$/, `${year}.md`);
 			const body = await readFile(file);
-			if (body === null) return text(`No page for ${topic.name}${year ? ` in ${year}` : ""}.`);
-			return text(`${clip(body, max_chars ?? 60000)}\n\nPage: ${WEB}/${file}\n${DISCLAIMER}`);
+			if (body === null) return fail(`No page for ${topic.name}${year ? ` in ${year}` : ""}.`);
+			return text(`${clip(absolutize(body, file), max_chars ?? 60000)}\n\nPage: ${WEB}/${file}\n${DISCLAIMER}`);
 		},
 	);
 
